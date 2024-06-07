@@ -22,9 +22,7 @@
     </div>
 
     <div class="controls2" id="color-controls">
-      <button data-color="#ff0000">Red</button>
-      <button data-color="#00ff00">Green</button>
-      <button data-color="#0000ff">Blue</button>
+      <input type="color" id="color-picker" value="#ff0000">
     </div>
 
   </model-viewer>
@@ -32,21 +30,21 @@
   <script>
     const modelViewer = document.querySelector("model-viewer#bed");
 
-    // Event listener for color buttons
-    document.querySelector('#color-controls').addEventListener('click', (event) => {
-      const colorString = event.target.dataset.color;
-      
-      // Assuming the material you want to change is at index 0
-      const materialIndex = 17;
+    // Event listener for color picker
+    document.querySelector('#color-picker').addEventListener('input', (event) => {
+      const colorString = event.target.value;
+
+      // Assuming the material you want to change is at index 14
+      const materialIndex = 14;
       const material = modelViewer.model.materials[materialIndex];
 
       if (material) {
         // Adjusting base color factor (assuming the material supports this)
-        //material.setBaseColorFactor([...hexToRgb(colorString), 1]);
-        
+        material.pbrMetallicRoughness.setBaseColorFactor([...hexToRgb(colorString), 1]);
+
         // Example: Modify other properties like metallic, roughness, etc.
         // material.pbrMetallicRoughness.setMetallic(0.5);
-         material.setEmissiveFactor([...hexToRgb(colorString), 1]);
+        // material.pbrMetallicRoughness.setRoughness(0.3);
       }
     });
 
