@@ -4,15 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link type="text/css" href="./styles.css" rel="stylesheet"/>
-  <title>Model Viewer with Variants</title>
+  <title>Model Viewer with Variants and Materials</title>
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
     body { margin: 0; display: flex; flex-direction: column; align-items: center; }
     model-viewer { width: 100%; height: 100vh; }
     .controls { margin-top: 20px; }
+    .controls2 { display: flex; gap: 10px; margin-top: 10px; }
   </style>
-
 </head>
 <body>
   <model-viewer id="bed" camera-controls touch-action="pan-y" src="assets/BedVersions.glb" ar ar-scale="fixed" tone-mapping="neutral" ar alt="A 3D model of a Bed" xr-environment >
@@ -27,59 +27,64 @@
       <button data-color="#0000ff">Blue</button>
     </div>
 
-
   </model-viewer>
+
   <script>
+    const modelViewer = document.querySelector("model-viewer#bed");
 
-const modelViewerColor = document.querySelector("model-viewer#bed");
+    // Event listener for color buttons
+    document.querySelector('#color-controls').addEventListener('click', (event) => {
+      const colorString = event.target.dataset.color;
+      
+      // Assuming the material you want to change is at index 0
+      const materialIndex = 17;
+      const material = modelViewer.model.materials[materialIndex];
 
-// Corrected selector to match the id of color controls
-document.querySelector('#color-controls').addEventListener('click', (event) => {
-  const colorString = event.target.dataset.color;
-  const [material] = modelViewerColor.model.materials;
-  if (material) {
-    material.pbrMetallicRoughness.setBaseColorFactor([...hexToRgb(colorString), 1]);
-  }
-});
+      if (material) {
+        // Adjusting base color factor (assuming the material supports this)
+        //material.setBaseColorFactor([...hexToRgb(colorString), 1]);
+        
+        // Example: Modify other properties like metallic, roughness, etc.
+        // material.pbrMetallicRoughness.setMetallic(0.5);
+         material.setEmissiveFactor([...hexToRgb(colorString), 1]);
+      }
+    });
 
+    // Helper function to convert hex color to RGB
+    function hexToRgb(hex) {
+      // Remove '#' if present
+      hex = hex.replace(/^#/, '');
 
-  const modelViewerVariants = document.querySelector("model-viewer#bed");
-  const select = document.querySelector('#variant');
-  
-  modelViewerVariants.addEventListener('load', () => {
-    const names = modelViewerVariants.availableVariants;
-    for (const name of names) {
-      const option = document.createElement('option');
-      option.value = name;
-      option.textContent = name;
-      select.appendChild(option);
+      // Convert short hex to full-length hex
+      if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+      }
+
+      // Convert hex to RGB
+      const bigint = parseInt(hex, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+
+      return [r / 255, g / 255, b / 255];
     }
 
+    const modelViewerVariants = document.querySelector("model-viewer#bed");
+    const select = document.querySelector('#variant');
 
-  });
-  
-  select.addEventListener('input', (event) => {
-    modelViewerVariants.variantName = event.target.value === 'default' ? null : event.target.value;
-  });
+    modelViewerVariants.addEventListener('load', () => {
+      const names = modelViewerVariants.availableVariants;
+      for (const name of names) {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      }
+    });
 
-  // Helper function to convert hex color to RGB
-function hexToRgb(hex) {
-  // Remove '#' if present
-  hex = hex.replace(/^#/, '');
-
-  // Convert short hex to full-length hex
-  if (hex.length === 3) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
-
-  // Convert hex to RGB
-  const bigint = parseInt(hex, 16);
-  const r = (bigint >> 16) & 255;
-  const g = (bigint >> 8) & 255;
-  const b = bigint & 255;
-
-  return [r / 255, g / 255, b / 255];
-}
+    select.addEventListener('input', (event) => {
+      modelViewerVariants.variantName = event.target.value === 'default' ? null : event.target.value;
+    });
   </script>
 </body>
 </html>
