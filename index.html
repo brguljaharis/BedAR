@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,12 +19,30 @@
 
     <div class="controls">
       <div>Variant: <select id="variant"></select></div>
+    </div>
+
+    <div class="controls2" id="color-controls">
       <button data-color="#ff0000">Red</button>
       <button data-color="#00ff00">Green</button>
       <button data-color="#0000ff">Blue</button>
     </div>
+
+
   </model-viewer>
   <script>
+
+const modelViewerColor = document.querySelector("model-viewer#bed");
+
+// Corrected selector to match the id of color controls
+document.querySelector('#color-controls').addEventListener('click', (event) => {
+  const colorString = event.target.dataset.color;
+  const [material] = modelViewerColor.model.materials;
+  if (material) {
+    material.pbrMetallicRoughness.setBaseColorFactor([...hexToRgb(colorString), 1]);
+  }
+});
+
+
   const modelViewerVariants = document.querySelector("model-viewer#bed");
   const select = document.querySelector('#variant');
   
@@ -44,6 +61,25 @@
   select.addEventListener('input', (event) => {
     modelViewerVariants.variantName = event.target.value === 'default' ? null : event.target.value;
   });
+
+  // Helper function to convert hex color to RGB
+function hexToRgb(hex) {
+  // Remove '#' if present
+  hex = hex.replace(/^#/, '');
+
+  // Convert short hex to full-length hex
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+
+  // Convert hex to RGB
+  const bigint = parseInt(hex, 16);
+  const r = (bigint >> 16) & 255;
+  const g = (bigint >> 8) & 255;
+  const b = bigint & 255;
+
+  return [r / 255, g / 255, b / 255];
+}
   </script>
 </body>
 </html>
