@@ -15,8 +15,7 @@
   </style>
 </head>
 <body>
-  <model-viewer id="bed" camera-controls touch-action="pan-y" src="assets/BedVersions.glb" ar ar-scale="fixed" tone-mapping="neutral" ar alt="A 3D model of a Bed" xr-environment >
-
+  <model-viewer id="bed" camera-controls touch-action="pan-y" src="assets/BedVersions.glb" ar ar-scale="fixed" tone-mapping="neutral" ar alt="A 3D model of a Bed" xr-environment>
     <div class="controls">
       <div>Variant: <select id="variant"></select></div>
     </div>
@@ -24,7 +23,12 @@
     <div class="controls2" id="color-controls">
       <input type="color" id="color-picker" value="#ff0000">
     </div>
-
+    <div class="controls3">
+      <div>
+        <label for="show-mattress">Show Mattress</label>
+        <input type="checkbox" id="show-mattress" checked>
+      </div>
+    </div>
   </model-viewer>
 
   <script>
@@ -33,32 +37,22 @@
     // Event listener for color picker
     document.querySelector('#color-picker').addEventListener('input', (event) => {
       const colorString = event.target.value;
-
-      // Assuming the material you want to change is at index 14
-      const materialIndex = 14;
+      const materialIndex = 14; // Update with correct index if needed
       const material = modelViewer.model.materials[materialIndex];
 
       if (material) {
-        // Adjusting base color factor (assuming the material supports this)
         material.pbrMetallicRoughness.setBaseColorFactor([...hexToRgb(colorString), 1]);
-
-        // Example: Modify other properties like metallic, roughness, etc.
-        // material.pbrMetallicRoughness.setMetallic(0.5);
-        // material.pbrMetallicRoughness.setRoughness(0.3);
       }
     });
 
     // Helper function to convert hex color to RGB
     function hexToRgb(hex) {
-      // Remove '#' if present
       hex = hex.replace(/^#/, '');
 
-      // Convert short hex to full-length hex
       if (hex.length === 3) {
         hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
       }
 
-      // Convert hex to RGB
       const bigint = parseInt(hex, 16);
       const r = (bigint >> 16) & 255;
       const g = (bigint >> 8) & 255;
@@ -67,21 +61,60 @@
       return [r / 255, g / 255, b / 255];
     }
 
-    const modelViewerVariants = document.querySelector("model-viewer#bed");
-    const select = document.querySelector('#variant');
+    // Populate variants dropdown
+    const selectVariant = document.querySelector('#variant');
 
-    modelViewerVariants.addEventListener('load', () => {
-      const names = modelViewerVariants.availableVariants;
+    modelViewer.addEventListener('load', () => {
+      const names = modelViewer.availableVariants;
       for (const name of names) {
         const option = document.createElement('option');
         option.value = name;
         option.textContent = name;
-        select.appendChild(option);
+        selectVariant.appendChild(option);
       }
     });
 
-    select.addEventListener('input', (event) => {
-      modelViewerVariants.variantName = event.target.value === 'default' ? null : event.target.value;
+    selectVariant.addEventListener('input', (event) => {
+      modelViewer.variantName = event.target.value === 'default' ? null : event.target.value;
+    });
+
+    // Handle mesh visibility based on checkbox
+    const showMattressCheckbox = document.querySelector("#show-mattress");
+
+    modelViewer.addEventListener("load", () => {
+      function updateAlphaValue(material, alpha) {
+        const pbr = material.pbrMetallicRoughness;
+        const baseColor = pbr.baseColorFactor;
+        baseColor[3] = alpha;
+        pbr.setBaseColorFactor(baseColor);
+      }
+
+      showMattressCheckbox.addEventListener("change", (event) => {
+        const madrac = modelViewer.model.getMaterialByName("Madrac");
+
+        if (madrac) {
+          madrac.setAlphaMode("BLEND");
+
+          const animationDuration = 1000; // 1 second
+          const startTimestamp = performance.now();
+
+          function animate(currentTimestamp) {
+            const elapsed = currentTimestamp - startTimestamp;
+            const delta = elapsed / animationDuration;
+            const alpha = event.target.checked ? delta : 1 - delta;
+
+            updateAlphaValue(madrac, alpha);
+
+            if (elapsed < animationDuration) {
+              requestAnimationFrame(animate);
+            }
+          }
+
+          requestAnimationFrame(animate);
+        } else {
+          console.error('Madrac material not found');
+        }
+      });
     });
   </script>
 </body>
