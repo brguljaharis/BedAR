@@ -15,17 +15,17 @@ body {
 
 model-viewer {
   width: 100%;
-  height: 80%; /* Adjusted height */
+  height: calc(100% - 60px); /* Adjusted height */
   background-color: #ffffff;
-  position: relative; /* Ensure relative positioning for absolute child */
-  overflow: hidden; /* Prevents scrollbars from appearing */
+  position: relative;
+  overflow: auto; /* Allow scrolling within model-viewer */
 }
 
 model-viewer > #ar-prompt {
-  position: fixed; /* Fixed positioning */
+  position: fixed;
   bottom: 20px; /* Adjust as needed */
-  left: calc(50% - 25px); /* Center horizontally */
-  z-index: 100; /* Ensure it's above other content */
+  left: calc(50% - 25px);
+  z-index: 100;
   display: none;
 }
 
