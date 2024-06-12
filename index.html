@@ -8,37 +8,102 @@
 
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    body { margin: 0; width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
-    .container { position: relative; width: 100%; height: 100%; }
-    model-viewer { width: 100%; height: 100%; }
-
-    .controls, .controls2, .controls3 { 
-      position: absolute; 
-      background: rgba(255, 255, 255, 0.8); 
-      padding: 10px; 
-      border-radius: 5px; 
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden; /* Hide any overflow */
     }
-    .controls { top: 20px; left: 20px; }
-    .controls2 { top: 70px; left: 20px; display: flex; gap: 10px; }
-    .controls3 { top: 120px; left: 20px; }
-    .Hotspot { position: absolute; background: rgba(255, 255, 255, 0.8); padding: 5px; border-radius: 3px; }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    #ar-prompt {
+      position: absolute;
+      bottom: 20px; /* Adjust as needed */
+      left: calc(50% - 25px); /* Center horizontally */
+      z-index: 100;
+      display: none;
+    }
+
+    model-viewer[ar-status="session-started"] #ar-prompt {
+      display: block;
+    }
+
+    model-viewer > #ar-prompt > img {
+      animation: circle 4s linear infinite; /* Example animation */
+      width: 50px; /* Adjust width as needed */
+      height: 50px; /* Adjust height as needed */
+    }
+
+    .controls,
+    .controls2,
+    .controls3 {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    .controls {
+      top: 20px;
+      left: 20px;
+    }
+
+    .controls2 {
+      top: 70px;
+      left: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .controls3 {
+      top: 120px;
+      left: 20px;
+    }
+
+    .Hotspot {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 5px;
+      border-radius: 3px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <model-viewer id="bed" camera-controls touch-action="pan-y" src="assets/BedVersions.glb" 
-      ar ar-scale="fixed" 
-      tone-mapping="ACES" 
+    <model-viewer id="bed" camera-controls touch-action="pan-y"
+      src="assets/BedVersions.glb"
+      ar ar-scale="fixed"
+      tone-mapping="ACES"
       ar alt="A 3D model of a Bed"
       xr-environment
       auto-rotate
       exposure="0.7"
       shadow-softness="2"
       shadow-intensity="0.9"
-      camera-controls>
-      
+      camera-controls >
+
+      <!-- AR prompt inside model-viewer -->
+      <div id="ar-prompt">
+        <img src="path_to_your_ar_icon.png" alt="AR Icon">
+      </div>
+
       <button class="Hotspot" slot="hotspot-1" data-surface="0 0 1516 1514 1415 0.700 0.198 0.102" data-visibility-attribute="visible">
-        <div class="HotspotAnnotation">Fine edges</div>
+        <div class="HotspotAnnotation">Refined edges</div>
       </button>
       <button class="Hotspot" slot="hotspot-3" data-surface="0 9 3 52 51 0.149 0.480 0.370" data-visibility-attribute="visible">
         <div class="HotspotAnnotation">Sensor lights</div>
