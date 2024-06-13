@@ -1339,78 +1339,78 @@
     "bufferViews" : [
         {
             "buffer" : 0,
-            "byteLength" : 9243,
+            "byteLength" : 9612,
             "byteOffset" : 0
         },
         {
             "buffer" : 0,
             "byteLength" : 9780,
-            "byteOffset" : 9244
+            "byteOffset" : 9612
         },
         {
             "buffer" : 0,
-            "byteLength" : 49964,
-            "byteOffset" : 19024
+            "byteLength" : 49941,
+            "byteOffset" : 19392
         },
         {
             "buffer" : 0,
             "byteLength" : 5218,
-            "byteOffset" : 68988
+            "byteOffset" : 69336
         },
         {
             "buffer" : 0,
             "byteLength" : 1000,
-            "byteOffset" : 74208
+            "byteOffset" : 74556
         },
         {
             "buffer" : 0,
             "byteLength" : 578,
-            "byteOffset" : 75208
+            "byteOffset" : 75556
         },
         {
             "buffer" : 0,
             "byteLength" : 6033,
-            "byteOffset" : 75788
+            "byteOffset" : 76136
         },
         {
             "buffer" : 0,
             "byteLength" : 25925,
-            "byteOffset" : 81824
+            "byteOffset" : 82172
         },
         {
             "buffer" : 0,
             "byteLength" : 2462,
-            "byteOffset" : 107752
+            "byteOffset" : 108100
         },
         {
             "buffer" : 0,
             "byteLength" : 4477,
-            "byteOffset" : 110216
+            "byteOffset" : 110564
         },
         {
             "buffer" : 0,
             "byteLength" : 5800,
-            "byteOffset" : 114696
+            "byteOffset" : 115044
         },
         {
             "buffer" : 0,
             "byteLength" : 1096,
-            "byteOffset" : 120496
+            "byteOffset" : 120844
         },
         {
             "buffer" : 0,
             "byteLength" : 846,
-            "byteOffset" : 121592
+            "byteOffset" : 121940
         },
         {
             "buffer" : 0,
             "byteLength" : 2288,
-            "byteOffset" : 122440
+            "byteOffset" : 122788
         },
         {
             "buffer" : 0,
             "byteLength" : 5227,
-            "byteOffset" : 124728
+            "byteOffset" : 125076
         }
     ],
     "samplers" : [
@@ -1421,7 +1421,7 @@
     ],
     "buffers" : [
         {
-            "byteLength" : 129956,
+            "byteLength" : 130304,
             "uri" : "Bed180x80.bin"
         }
     ]
