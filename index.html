@@ -73,6 +73,10 @@
     </div>
   </div>
 
+  <!-- Audio elements for sound effects -->
+  <audio id="light-on-sound" src="assets/sounds/LightSwitchOn.mp3"></audio>
+  <audio id="light-off-sound" src="assets/sounds/LightSwitchOff.mp3"></audio>
+
   <script>
     const modelViewer = document.querySelector("model-viewer#bed");
 
@@ -185,14 +189,18 @@
 
     // Handle light toggling
     const toggleLightsCheckbox = document.querySelector("#toggle-lights");
+    const lightOnSound = document.querySelector("#light-on-sound");
+    const lightOffSound = document.querySelector("#light-off-sound");
 
     toggleLightsCheckbox.addEventListener("change", (event) => {
       if (event.target.checked) {
         modelViewer.exposure = 0.02;  // Turn off lights
         modelViewer.classList.add("dark-mode");  // Add dark background
+        lightOffSound.play(); // Play light off sound
       } else {
         modelViewer.exposure = 0.7;  // Turn on lights
         modelViewer.classList.remove("dark-mode");  // Remove dark background
+        lightOnSound.play(); // Play light on sound
       }
     });
   </script>
