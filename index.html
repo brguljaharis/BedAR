@@ -7,6 +7,31 @@
     <title>Model Viewer with Variants and Materials</title>
   
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+      .switch-button {
+        width: 60px;
+        height: 30px;
+        background-color: #ccc;
+        border: 2px solid #999;
+        border-radius: 15px;
+        position: relative;
+        cursor: pointer;
+        text-align: center;
+        line-height: 30px;
+        font-size: 14px;
+        user-select: none;
+      }
+
+      .switch-button.on {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .switch-button.off {
+        background-color: #ccc;
+        color: black;
+      }
+    </style>
   </head>
 <body>
   <div class="container">
@@ -19,8 +44,7 @@
       exposure="0.7"
       shadow-softness="1"
       shadow-intensity="0.5"
-      min-camera-orbit="auto 0deg auto" max-camera-orbit="auto 90deg auto"
-       >
+      min-camera-orbit="auto 0deg auto" max-camera-orbit="auto 90deg auto">
       
       <button class="Hotspot" slot="hotspot-1" data-surface="0 9 3 52 51 0.149 0.480 0.370" data-visibility-attribute="visible">
         <div class="HotspotAnnotation">Sensor lights</div>
@@ -75,15 +99,13 @@
     </div>
 
     <div class="controls5">
-      <div>
-        <label for="toggle-lights">TURN ON/OFF LIGHTS</label>
-        <input type="checkbox" id="toggle-lights">
-      </div>
+      <label for="toggle-lights">TURN ON/OFF LIGHTS</label>
+      <button id="light-switch" class="switch-button">ON</button>
     </div>
 
     <div class="controls6">
-      <label for="text-input">Engraved Text</label>
-      <input type="text" id="text-input" value="TYPE YOUR TEXT HERE">
+      <label for="text-input">ENGRAVED TEXT</label>
+      <input type="text" id="text-input" placeholder="TYPE YOUR TEXT HERE">
     </div>
   </div>
 
@@ -201,92 +223,117 @@
       selectVariant.value = modelViewer.variantName || 'default';
     });
 
-    // Handle light toggling
-    const toggleLightsCheckbox = document.querySelector("#toggle-lights");
-    const lightOnSound = document.querySelector("#light-on-sound");
-    const lightOffSound = document.querySelector("#light-off-sound");
+// Handle light toggling
+const toggleLightsButton = document.querySelector(".switch-button");
+const lightOnSound = document.querySelector("#light-on-sound");
+const lightOffSound = document.querySelector("#light-off-sound");
 
-    toggleLightsCheckbox.addEventListener("change", (event) => {
-      if (event.target.checked) {
-        modelViewer.exposure = 0.02;  // Turn off lights
-        modelViewer.classList.add("dark-mode");  // Add dark background
-        lightOffSound.play(); // Play light off sound
-      } else {
-        modelViewer.exposure = 0.7;  // Turn on lights
-        modelViewer.classList.remove("dark-mode");  // Remove dark background
-        lightOnSound.play(); // Play light on sound
+function toggleLights(state) {
+  if (state === "off") {
+    modelViewer.exposure = 0.02;  // Turn off lights
+    modelViewer.classList.add("dark-mode");  // Add dark background
+    toggleLightsButton.classList.remove("on");
+    toggleLightsButton.classList.add("off");
+    toggleLightsButton.textContent = "OFF";
+
+    // Check if audio playback is allowed
+    if (lightOffSound.paused) {
+      lightOffSound.play().catch(error => {
+        console.error('Failed to play light off sound:', error);
+      });
+    }
+  } else {
+    modelViewer.exposure = 0.7;  // Turn on lights
+    modelViewer.classList.remove("dark-mode");  // Remove dark background
+    toggleLightsButton.classList.remove("off");
+    toggleLightsButton.classList.add("on");
+    toggleLightsButton.textContent = "ON";
+
+    // Check if audio playback is allowed
+    if (lightOnSound.paused) {
+      lightOnSound.play().catch(error => {
+        console.error('Failed to play light on sound:', error);
+      });
+    }
+  }
+}
+
+// Set initial state to "on"
+toggleLights("on");
+
+toggleLightsButton.addEventListener("click", () => {
+  const isOn = toggleLightsButton.classList.contains("on");
+  toggleLights(isOn ? "off" : "on");
+});
+
+    // Handle engraved text input
+    const textInput = document.querySelector("#text-input");
+    let canvasTexture = null;
+    let currentText = 'TYPE YOUR TEXT HERE'; // Default text
+
+    function getCanvasTexture() {
+      if (canvasTexture) return canvasTexture;
+      canvasTexture = modelViewer.createCanvasTexture();
+
+      // Ensure canvas dimensions maintain a suitable aspect ratio
+      const canvasWidth = 1800;
+      const canvasHeight = 300;
+      canvasTexture.source.element.width = canvasWidth;
+      canvasTexture.source.element.height = canvasHeight;
+
+      const ctx = canvasTexture.source.element.getContext('2d');
+
+      // Set background color to white
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw the centered text
+      let fontSize = 60; // Initial font size
+      ctx.font = `${fontSize}px sans-serif`;
+      ctx.fillStyle = "#8B4513"; // Brown wood color
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // Measure text width and adjust font size to fit
+      let textWidth = ctx.measureText(currentText).width;
+      while (textWidth > canvasWidth - 1250 && fontSize > 10) { // 20 is for padding
+        fontSize -= 3;
+        ctx.font = `${fontSize}px sans-serif`;
+        textWidth = ctx.measureText(currentText).width;
       }
+
+      // Manual offsets to fine-tune text position
+      const xOffset = 190;  // Adjust this value to move text horizontally if needed
+      const yOffset = 0;  // Adjust this value to move text vertically if needed
+      ctx.fillText(currentText, canvasWidth / 2 + xOffset, canvasHeight / 2 + yOffset);
+
+      canvasTexture.source.update();
+      return canvasTexture;
+    }
+
+    function updateCanvasText(newText) {
+      // Limit text length to 20 characters
+      const maxLength = 20;
+      if (newText.length > maxLength) {
+        newText = newText.substring(0, maxLength);
+        alert("Maximum text length reached (20 characters)");
+      }
+
+      currentText = newText;
+      canvasTexture = null; // Reset the canvas texture to force re-creation
+      const baseColorTexture = modelViewer.model.materials[20].pbrMetallicRoughness.baseColorTexture;
+      baseColorTexture.setTexture(getCanvasTexture());
+    }
+
+    textInput.addEventListener('input', (event) => {
+      updateCanvasText(event.target.value);
+    });
+
+    // Ensure initial texture setup on model load event
+    modelViewer.addEventListener('load', () => {
+      const baseColorTexture = modelViewer.model.materials[20].pbrMetallicRoughness.baseColorTexture;
+      baseColorTexture.setTexture(getCanvasTexture());
     });
   </script>
-<script type="module">
-  const modelViewerAnimated = document.querySelector("model-viewer#bed");
-  let canvasTexture = null;
-  let currentText = 'TYPE YOUR TEXT HERE'; // Default text
-
-  function getCanvasTexture() {
-    if (canvasTexture) return canvasTexture;
-    canvasTexture = modelViewerAnimated.createCanvasTexture();
-    
-    // Ensure canvas dimensions maintain a suitable aspect ratio
-    const canvasWidth = 1800;
-    const canvasHeight = 300;
-    canvasTexture.source.element.width = canvasWidth;
-    canvasTexture.source.element.height = canvasHeight;
-    
-    const ctx = canvasTexture.source.element.getContext('2d');
-
-    // Set background color to white
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-    // Draw the centered text
-    let fontSize = 60; // Initial font size
-    ctx.font = `${fontSize}px sans-serif`;
-    ctx.fillStyle = "#8B4513"; // Brown wood color
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    // Measure text width and adjust font size to fit
-    let textWidth = ctx.measureText(currentText).width;
-    while (textWidth > canvasWidth - 1250 && fontSize > 10) { // 20 is for padding
-      fontSize -= 3;
-      ctx.font = `${fontSize}px sans-serif`;
-      textWidth = ctx.measureText(currentText).width;
-    }
-
-
-
-    // Manual offsets to fine-tune text position
-    const xOffset = 190;  // Adjust this value to move text horizontally if needed
-    const yOffset = 0;  // Adjust this value to move text vertically if needed
-    ctx.fillText(currentText, canvasWidth / 2 + xOffset, canvasHeight / 2 + yOffset);
-
-    canvasTexture.source.update();
-    return canvasTexture;
-  }
-
-  function updateCanvasText(newText) {
-    // Limit text length to 20 characters
-    const maxLength = 20;
-    if (newText.length > maxLength) {
-      newText = newText.substring(0, maxLength);
-      alert("Maximum text length reached (20 characters)");
-    }
-
-    currentText = newText;
-    canvasTexture = null; // Reset the canvas texture to force re-creation
-    const baseColorTexture = modelViewerAnimated.model.materials[20].pbrMetallicRoughness.baseColorTexture;
-    baseColorTexture.setTexture(getCanvasTexture());
-  }
-
-  document.querySelector('#text-input').addEventListener('input', (event) => {
-    updateCanvasText(event.target.value);
-  });
-
-  // Ensure initial texture setup on model load event
-  modelViewerAnimated.addEventListener('load', () => {
-    const baseColorTexture = modelViewerAnimated.model.materials[20].pbrMetallicRoughness.baseColorTexture;
-    baseColorTexture.setTexture(getCanvasTexture());
-  });
-</script>
+</body>
 </html>
