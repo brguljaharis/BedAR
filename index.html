@@ -7,34 +7,10 @@
     <title>Model Viewer with Variants and Materials</title>
   
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-    <style>
-      .switch-button {
-        width: 60px;
-        height: 30px;
-        background-color: #ccc;
-        border: 2px solid #999;
-        border-radius: 15px;
-        position: relative;
-        cursor: pointer;
-        text-align: center;
-        line-height: 30px;
-        font-size: 14px;
-        user-select: none;
-      }
-
-      .switch-button.on {
-        background-color: #4caf50;
-        color: white;
-      }
-
-      .switch-button.off {
-        background-color: #ccc;
-        color: black;
-      }
-    </style>
   </head>
 <body>
   <div class="container">
+    <button class="ar-button">Activate AR</button>
     <model-viewer id="bed" camera-controls touch-action="pan-y" camera-orbit="-20deg 75deg 4m" src="assets/.glTF/Bed180x80.gltf" 
       ar ar-scale="fixed" 
       tone-mapping="ACES" 
