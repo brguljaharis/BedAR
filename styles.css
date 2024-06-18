@@ -90,7 +90,7 @@
       padding: 5px;
     }
 
-    .Hotspot {
+    /* .Hotspot {
       background: #fff;
       border-radius: 4px;
       border: none;
@@ -108,7 +108,7 @@
       width: max-content;
       height: max-content;
       transform: translate3d(-50%, -50%, 0);
-      }
+      } */
 
     .switch-button {
       width: 60px;
@@ -124,6 +124,7 @@
       user-select: none;
       transition: background-color 0.3s;
       color: white;
+
     }
 
     .switch-button.off {
