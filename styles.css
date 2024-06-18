@@ -43,6 +43,14 @@ model-viewer {
   padding: 10px;
   border-radius: 5px;
 }
+.controls6 {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+
 
 .controls4 {
   top: 20px;
@@ -68,6 +76,11 @@ model-viewer {
 
 .controls5 {
   top: 220px;
+  left: 20px;
+}
+
+.controls6 {
+  top: 270px;
   left: 20px;
 }
 

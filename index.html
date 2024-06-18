@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link type="text/css" href="./styles.css" rel="stylesheet"/>
-  <title>Model Viewer with Variants and Materials</title>
-
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="text/css" href="./styles.css" rel="stylesheet"/>
+    <title>Model Viewer with Variants and Materials</title>
+  
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  </head>
 <body>
   <div class="container">
     <model-viewer id="bed" camera-controls touch-action="pan-y" camera-orbit="-20deg 75deg 4m" src="assets/.glTF/Bed180x80.gltf" 
@@ -17,9 +17,10 @@
       xr-environment
       auto-rotate
       exposure="0.7"
-      shadow-softness="0.8"
+      shadow-softness="1"
       shadow-intensity="0.5"
-      camera-controls >
+      min-camera-orbit="auto 0deg auto" max-camera-orbit="auto 90deg auto"
+       >
       
       <button class="Hotspot" slot="hotspot-1" data-surface="0 9 3 52 51 0.149 0.480 0.370" data-visibility-attribute="visible">
         <div class="HotspotAnnotation">Sensor lights</div>
@@ -43,8 +44,16 @@
     <div class="controls4">
       <div>SIZE 
         <select id="model-selector">
-          <option value="assets/.glTF/Bed180x80.gltf">180x80</option>
+          <option value="assets/.glTF/Bed160x70.gltf">160x70</option>
+          <option value="assets/.glTF/Bed160x80.gltf">160x80</option>
+          <option value="assets/.glTF/Bed170x70.gltf">170x70</option>
+          <option value="assets/.glTF/Bed170x80.gltf">170x80</option>
+          <option value="assets/.glTF/Bed180x80.gltf" selected>180x80</option>
+          <option value="assets/.glTF/Bed180x90.gltf">180x90</option>
+          <option value="assets/.glTF/Bed190x80.gltf">190x80</option>
           <option value="assets/.glTF/Bed190x90.gltf">190x90</option>
+          <option value="assets/.glTF/Bed200x80.gltf">200x80</option>
+          <option value="assets/.glTF/Bed200x90.gltf">200x90</option>
         </select>
       </div>
     </div>
@@ -70,6 +79,11 @@
         <label for="toggle-lights">TURN ON/OFF LIGHTS</label>
         <input type="checkbox" id="toggle-lights">
       </div>
+    </div>
+
+    <div class="controls6">
+      <label for="text-input">Engraved Text</label>
+      <input type="text" id="text-input" value="TYPE YOUR TEXT HERE">
     </div>
   </div>
 
@@ -204,18 +218,75 @@
       }
     });
   </script>
-  <script type="module">
-    const modelViewer2 = document.querySelector("#bed");
-    const annotationClicked = (annotation) => {
-      let dataset = annotation.dataset;
-      modelViewer2.cameraTarget = dataset.target;
-      modelViewer2.cameraOrbit = dataset.orbit;
-      modelViewer2.fieldOfView = '45deg';
+<script type="module">
+  const modelViewerAnimated = document.querySelector("model-viewer#bed");
+  let canvasTexture = null;
+  let currentText = 'TYPE YOUR TEXT HERE'; // Default text
+
+  function getCanvasTexture() {
+    if (canvasTexture) return canvasTexture;
+    canvasTexture = modelViewerAnimated.createCanvasTexture();
+    
+    // Ensure canvas dimensions maintain a suitable aspect ratio
+    const canvasWidth = 1800;
+    const canvasHeight = 300;
+    canvasTexture.source.element.width = canvasWidth;
+    canvasTexture.source.element.height = canvasHeight;
+    
+    const ctx = canvasTexture.source.element.getContext('2d');
+
+    // Set background color to white
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    // Draw the centered text
+    let fontSize = 60; // Initial font size
+    ctx.font = `${fontSize}px sans-serif`;
+    ctx.fillStyle = "#8B4513"; // Brown wood color
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Measure text width and adjust font size to fit
+    let textWidth = ctx.measureText(currentText).width;
+    while (textWidth > canvasWidth - 1250 && fontSize > 10) { // 20 is for padding
+      fontSize -= 3;
+      ctx.font = `${fontSize}px sans-serif`;
+      textWidth = ctx.measureText(currentText).width;
     }
-  
-    modelViewer2.querySelectorAll('button').forEach((hotspot) => {
-      hotspot.addEventListener('click', () => annotationClicked(hotspot));
-    });
-  </script>
-</body>
+
+
+
+    // Manual offsets to fine-tune text position
+    const xOffset = 190;  // Adjust this value to move text horizontally if needed
+    const yOffset = 0;  // Adjust this value to move text vertically if needed
+    ctx.fillText(currentText, canvasWidth / 2 + xOffset, canvasHeight / 2 + yOffset);
+
+    canvasTexture.source.update();
+    return canvasTexture;
+  }
+
+  function updateCanvasText(newText) {
+    // Limit text length to 20 characters
+    const maxLength = 20;
+    if (newText.length > maxLength) {
+      newText = newText.substring(0, maxLength);
+      alert("Maximum text length reached (20 characters)");
+    }
+
+    currentText = newText;
+    canvasTexture = null; // Reset the canvas texture to force re-creation
+    const baseColorTexture = modelViewerAnimated.model.materials[20].pbrMetallicRoughness.baseColorTexture;
+    baseColorTexture.setTexture(getCanvasTexture());
+  }
+
+  document.querySelector('#text-input').addEventListener('input', (event) => {
+    updateCanvasText(event.target.value);
+  });
+
+  // Ensure initial texture setup on model load event
+  modelViewerAnimated.addEventListener('load', () => {
+    const baseColorTexture = modelViewerAnimated.model.materials[20].pbrMetallicRoughness.baseColorTexture;
+    baseColorTexture.setTexture(getCanvasTexture());
+  });
+</script>
 </html>
