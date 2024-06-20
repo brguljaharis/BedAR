@@ -10,6 +10,15 @@
 <body>
   <div class="container">
     <img src="assets/images/ByBabi2.png" alt="ByBabi Logo" class="logo">
+
+    <!-- Language Selector -->
+    <div class="controls7">
+      <label for="language-selector">LANGUAGE</label>
+      <select id="language-selector">
+        <option value="en" selected>English</option>
+        <option value="bs">Bosnian</option>
+      </select>
+    </div>
     
     <model-viewer id="bed" camera-controls touch-action="pan-y" camera-orbit="-20deg 75deg 4m" src="assets/.glTF/Bed180x80.gltf" 
       ar ar-scale="fixed" 
@@ -71,6 +80,60 @@
   <audio id="light-off-sound" src="assets/sounds/LightSwitchOff.mp3"></audio>
 
   <script>
+    const translations = {
+      en: {
+        size: 'SIZE',
+        variant: 'VARIANT',
+        pickColor: 'PICK COLOR',
+        showHideMattress: 'SHOW/HIDE MATTRESS',
+        toggleLights: 'TURN ON/OFF LIGHTS',
+        engravedText: 'ENGRAVED TEXT',
+        placeholder: 'TYPE YOUR TEXT HERE',
+        language: 'LANGUAGE',
+      },
+      bs: {
+        size: 'VELIČINA',
+        variant: 'VARIJANTA',
+        pickColor: 'IZABERI BOJU',
+        showHideMattress: 'PRIKAŽI/SAKRIJ MADRAC',
+        toggleLights: 'UPALI/UGASI SVJETLA',
+        engravedText: 'UGRAVIRANI TEKST',
+        placeholder: 'UPIŠITE VAŠ TEKST OVDJE',
+        language: 'JEZIK',
+      }
+    };
+
+    const elementsToTranslate = {
+      size: document.querySelector('.controls4 div'),
+      variant: document.querySelector('.controls div'),
+      pickColor: document.querySelector('#color-controls label'),
+      showHideMattress: document.querySelector('.controls3 label'),
+      toggleLights: document.querySelector('.controls5 label'),
+      engravedText: document.querySelector('.controls6 label'),
+      placeholder: document.querySelector('#text-input'),
+      language: document.querySelector('.controls7 label')
+    };
+
+    function translatePage(lang) {
+      const translation = translations[lang];
+      elementsToTranslate.size.firstChild.textContent = translation.size;
+      elementsToTranslate.variant.firstChild.textContent = translation.variant;
+      elementsToTranslate.pickColor.textContent = translation.pickColor;
+      elementsToTranslate.showHideMattress.textContent = translation.showHideMattress;
+      elementsToTranslate.toggleLights.textContent = translation.toggleLights;
+      elementsToTranslate.engravedText.textContent = translation.engravedText;
+      elementsToTranslate.placeholder.placeholder = translation.placeholder;
+      elementsToTranslate.language.textContent = translation.language;
+    }
+
+    document.querySelector('#language-selector').addEventListener('change', (event) => {
+      const selectedLang = event.target.value;
+      translatePage(selectedLang);
+    });
+
+    // Initial translation
+    translatePage('en');
+
     const modelViewer = document.querySelector("model-viewer#bed");
 
     // Event listener for color picker
