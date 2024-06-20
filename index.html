@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bs">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +11,10 @@
   <div class="container">
     <img src="assets/images/ByBabi2.png" alt="ByBabi Logo" class="logo">
 
-    <!-- Language Selector -->
-    <div class="controls7">
-      <label for="language-selector">LANGUAGE</label>
-      <select id="language-selector">
-        <option value="en" selected>English</option>
-        <option value="bs">Bosnian</option>
-      </select>
+    <!-- Language Selector Buttons -->
+    <div class="language-buttons">
+      <button id="english-button">English</button>
+      <button id="bosnian-button">Bosnian</button>
     </div>
     
     <model-viewer id="bed" camera-controls touch-action="pan-y" camera-orbit="-20deg 75deg 4m" src="assets/.glTF/Bed180x80.gltf" 
@@ -33,7 +30,7 @@
     </model-viewer>
 
     <div class="controls4">
-      <div>SIZE 
+      <div id="size-label">VELIČINA 
         <select id="model-selector">
           <option value="assets/.glTF/Bed160x70.gltf">160x70</option>
           <option value="assets/.glTF/Bed160x80.gltf">160x80</option>
@@ -50,29 +47,29 @@
     </div>
 
     <div class="controls">
-      <div>VARIANT <select id="variant"></select></div>
+      <div id="variant-label">VARIJANTA <select id="variant"></select></div>
     </div>
 
     <div class="controls2" id="color-controls">
-      <label for="color">PICK COLOR</label>
+      <label for="color" id="pick-color-label">IZABERI BOJU</label>
       <input type="color" id="color-picker" value="#ff0000">
     </div>
 
     <div class="controls3">
       <div>
-        <label for="show-mattress">SHOW/HIDE MATTRESS</label>
+        <label for="show-mattress" id="show-hide-mattress-label">PRIKAŽI/SAKRIJ MADRAC</label>
         <input type="checkbox" id="show-mattress" checked>
       </div>
     </div>
 
     <div class="controls5">
-      <label for="toggle-lights">TURN ON/OFF LIGHTS</label>
+      <label for="toggle-lights" id="toggle-lights-label">UPALI/UGASI SVJETLA</label>
       <button id="light-switch" class="switch-button">ON</button>
     </div>
 
     <div class="controls6">
-      <label for="text-input">ENGRAVED TEXT</label>
-      <input type="text" id="text-input" placeholder="TYPE YOUR TEXT HERE">
+      <label for="text-input" id="engraved-text-label">UGRAVIRANI TEKST</label>
+      <input type="text" id="text-input" placeholder="UPIŠITE VAŠ TEKST OVDJE">
     </div>
   </div>
 
@@ -89,7 +86,6 @@
         toggleLights: 'TURN ON/OFF LIGHTS',
         engravedText: 'ENGRAVED TEXT',
         placeholder: 'TYPE YOUR TEXT HERE',
-        language: 'LANGUAGE',
       },
       bs: {
         size: 'VELIČINA',
@@ -99,19 +95,17 @@
         toggleLights: 'UPALI/UGASI SVJETLA',
         engravedText: 'UGRAVIRANI TEKST',
         placeholder: 'UPIŠITE VAŠ TEKST OVDJE',
-        language: 'JEZIK',
       }
     };
 
     const elementsToTranslate = {
-      size: document.querySelector('.controls4 div'),
-      variant: document.querySelector('.controls div'),
-      pickColor: document.querySelector('#color-controls label'),
-      showHideMattress: document.querySelector('.controls3 label'),
-      toggleLights: document.querySelector('.controls5 label'),
-      engravedText: document.querySelector('.controls6 label'),
+      size: document.querySelector('#size-label'),
+      variant: document.querySelector('#variant-label'),
+      pickColor: document.querySelector('#pick-color-label'),
+      showHideMattress: document.querySelector('#show-hide-mattress-label'),
+      toggleLights: document.querySelector('#toggle-lights-label'),
+      engravedText: document.querySelector('#engraved-text-label'),
       placeholder: document.querySelector('#text-input'),
-      language: document.querySelector('.controls7 label')
     };
 
     function translatePage(lang) {
@@ -123,16 +117,18 @@
       elementsToTranslate.toggleLights.textContent = translation.toggleLights;
       elementsToTranslate.engravedText.textContent = translation.engravedText;
       elementsToTranslate.placeholder.placeholder = translation.placeholder;
-      elementsToTranslate.language.textContent = translation.language;
     }
 
-    document.querySelector('#language-selector').addEventListener('change', (event) => {
-      const selectedLang = event.target.value;
-      translatePage(selectedLang);
+    document.querySelector('#english-button').addEventListener('click', () => {
+      translatePage('en');
+    });
+
+    document.querySelector('#bosnian-button').addEventListener('click', () => {
+      translatePage('bs');
     });
 
     // Initial translation
-    translatePage('en');
+    translatePage('bs');
 
     const modelViewer = document.querySelector("model-viewer#bed");
 
@@ -289,7 +285,7 @@
     // Handle engraved text input
     const textInput = document.querySelector("#text-input");
     let canvasTexture = null;
-    let currentText = 'TYPE YOUR TEXT HERE'; // Default text
+    let currentText = 'UPIŠITE VAŠ TEKST OVDJE'; // Default text
 
     function getCanvasTexture() {
       if (canvasTexture) return canvasTexture;
