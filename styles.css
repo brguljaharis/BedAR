@@ -19,9 +19,8 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%); 
-
   background-color: rgba(184, 179, 179, 0.158); 
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); 
+
 }
 
 .language-button {
