@@ -1,164 +1,11 @@
 <!DOCTYPE html>
 <html lang="bs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link type="text/css" href="./styles.css" rel="stylesheet"/>
   <title>Model Viewer with Variants and Materials</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: #f5f7fa;
-      color: #333;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .logo {
-      width: 200px;
-      height: auto;
-      margin-bottom: 10px;
-    }
-
-    .language-buttons {
-      display: flex;
-      gap: 10px;
-    }
-
-    .language-buttons button {
-      padding: 10px 20px;
-      border: none;
-      background-color: #4CAF50;
-      color: white;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-
-    .language-buttons button:hover {
-      background-color: #45a049;
-    }
-
-    model-viewer {
-      width: 100%;
-      max-width: 100%;
-      height: 500px;
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    .controls,
-    .controls2,
-    .controls3,
-    .controls4,
-    .controls5,
-    .controls6 {
-      background: #fff;
-      padding: 15px 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
-      width: 100%;
-      max-width: 500px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    label,
-    select,
-    input[type="text"] {
-      font-size: 16px;
-    }
-
-    select,
-    input[type="color"],
-    input[type="text"] {
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      width: 100%;
-      max-width: 250px;
-    }
-
-    input[type="text"] {
-      flex: 1;
-    }
-
-    .switch-button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-    }
-
-    .switch-button.on {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    .switch-button.off {
-      background-color: #f44336;
-      color: white;
-    }
-
-    /* Dark mode support */
-    .dark-mode {
-      background-color: #1e1e1e !important;
-      color: #e0e0e0 !important;
-    }
-
-    .dark-mode .controls,
-    .dark-mode .controls2,
-    .dark-mode .controls3,
-    .dark-mode .controls4,
-    .dark-mode .controls5,
-    .dark-mode .controls6 {
-      background: #2c2c2c;
-      color: white;
-    }
-
-    .dark-mode .switch-button {
-      color: white;
-    }
-
-    @media (max-width: 600px) {
-      .controls,
-      .controls2,
-      .controls3,
-      .controls4,
-      .controls5,
-      .controls6 {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      select,
-      input[type="color"],
-      input[type="text"] {
-        max-width: 100%;
-      }
-    }
-
-    #loading-message {
-      display: none;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
@@ -169,17 +16,21 @@
       <button id="english-button">English</button>
       <button id="bosnian-button">Bosnian</button>
     </div>
-
-    <model-viewer id="bed" camera-controls touch-action="pan-y" camera-orbit="-20deg 75deg 4m"
-      src="assets/.glTF/Bed180x80.gltf" ar ar-scale="fixed" tone-mapping="ACES" ar alt="A 3D model of a Bed"
-      xr-environment auto-rotate exposure="0.7" shadow-softness="1" shadow-intensity="0.5"
+    
+    <model-viewer id="bed" camera-controls touch-action="pan-y" camera-orbit="-20deg 75deg 4m" src="assets/.glTF/Bed180x80.gltf" 
+      ar ar-scale="fixed" 
+      tone-mapping="ACES" 
+      ar alt="A 3D model of a Bed"
+      xr-environment
+      auto-rotate
+      exposure="0.7"
+      shadow-softness="1"
+      shadow-intensity="0.5"
       min-camera-orbit="auto 0deg auto" max-camera-orbit="auto 90deg auto">
     </model-viewer>
 
-    <div id="loading-message">Loading model...</div>
-
     <div class="controls4">
-      <label id="size-label">VELIČINA
+      <div id="size-label">VELIČINA 
         <select id="model-selector">
           <option value="assets/.glTF/Bed160x70.gltf">160x70</option>
           <option value="assets/.glTF/Bed160x80.gltf">160x80</option>
@@ -192,13 +43,11 @@
           <option value="assets/.glTF/Bed200x80.gltf">200x80</option>
           <option value="assets/.glTF/Bed200x90.gltf">200x90</option>
         </select>
-      </label>
+      </div>
     </div>
 
     <div class="controls">
-      <label id="variant-label">VARIJANTA
-        <select id="variant"></select>
-      </label>
+      <div id="variant-label">VARIJANTA <select id="variant"></select></div>
     </div>
 
     <div class="controls2" id="color-controls">
@@ -207,8 +56,10 @@
     </div>
 
     <div class="controls3">
-      <label for="show-mattress" id="show-hide-mattress-label">PRIKAŽI/SAKRIJ MADRAC</label>
-      <input type="checkbox" id="show-mattress" checked>
+      <div>
+        <label for="show-mattress" id="show-hide-mattress-label">PRIKAŽI/SAKRIJ MADRAC</label>
+        <input type="checkbox" id="show-mattress" checked>
+      </div>
     </div>
 
     <div class="controls5">
@@ -225,9 +76,280 @@
   <audio id="light-on-sound" src="assets/sounds/LightSwitchOn.mp3"></audio>
   <audio id="light-off-sound" src="assets/sounds/LightSwitchOff.mp3"></audio>
 
-  <!-- Your existing <script> section stays the same -->
   <script>
-    // Your original JavaScript remains unchanged and goes here
+    const translations = {
+      en: {
+        size: 'SIZE',
+        variant: 'VARIANT',
+        pickColor: 'PICK COLOR',
+        showHideMattress: 'SHOW/HIDE MATTRESS',
+        toggleLights: 'TURN ON/OFF LIGHTS',
+        engravedText: 'ENGRAVED TEXT',
+        placeholder: 'TYPE YOUR TEXT HERE',
+      },
+      bs: {
+        size: 'VELIČINA',
+        variant: 'VARIJANTA',
+        pickColor: 'IZABERI BOJU',
+        showHideMattress: 'PRIKAŽI/SAKRIJ MADRAC',
+        toggleLights: 'UPALI/UGASI SVJETLA',
+        engravedText: 'UGRAVIRANI TEKST',
+        placeholder: 'UPIŠITE VAŠ TEKST OVDJE',
+      }
+    };
+
+    const elementsToTranslate = {
+      size: document.querySelector('#size-label'),
+      variant: document.querySelector('#variant-label'),
+      pickColor: document.querySelector('#pick-color-label'),
+      showHideMattress: document.querySelector('#show-hide-mattress-label'),
+      toggleLights: document.querySelector('#toggle-lights-label'),
+      engravedText: document.querySelector('#engraved-text-label'),
+      placeholder: document.querySelector('#text-input'),
+    };
+
+    function translatePage(lang) {
+      const translation = translations[lang];
+      elementsToTranslate.size.firstChild.textContent = translation.size;
+      elementsToTranslate.variant.firstChild.textContent = translation.variant;
+      elementsToTranslate.pickColor.textContent = translation.pickColor;
+      elementsToTranslate.showHideMattress.textContent = translation.showHideMattress;
+      elementsToTranslate.toggleLights.textContent = translation.toggleLights;
+      elementsToTranslate.engravedText.textContent = translation.engravedText;
+      elementsToTranslate.placeholder.placeholder = translation.placeholder;
+    }
+
+    document.querySelector('#english-button').addEventListener('click', () => {
+      translatePage('en');
+    });
+
+    document.querySelector('#bosnian-button').addEventListener('click', () => {
+      translatePage('bs');
+    });
+
+    // Initial translation
+    translatePage('en');
+
+    const modelViewer = document.querySelector("model-viewer#bed");
+
+    // Event listener for color picker
+    document.querySelector('#color-picker').addEventListener('input', (event) => {
+      const colorString = event.target.value;
+      const materialIndex = 14; // Update with correct index if needed
+      const material = modelViewer.model.materials[materialIndex];
+
+      if (material) {
+        material.pbrMetallicRoughness.setBaseColorFactor([...hexToRgb(colorString), 1]);
+      }
+    });
+
+    // Helper function to convert hex color to RGB
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+
+      if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+      }
+
+      const bigint = parseInt(hex, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+
+      return [r / 255, g / 255, b / 255];
+    }
+
+    // Populate variants dropdown
+    const selectVariant = document.querySelector('#variant');
+    function populateVariants() {
+      selectVariant.innerHTML = ''; // Clear existing options
+      const names = modelViewer.availableVariants;
+      for (const name of names) {
+        const option = document.createElement('option');
+        option.value = name;
+        option.textContent = name;
+        selectVariant.appendChild(option);
+      }
+      // Set the selected option to the current variant
+      selectVariant.value = modelViewer.variantName || 'ANTHRACITE';
+    }
+
+    modelViewer.addEventListener('load', () => {
+      populateVariants();
+
+      // Apply initial color
+      const initialColor = document.querySelector('#color-picker').value;
+      const materialIndex = 14; // Update with correct index if needed
+      const material = modelViewer.model.materials[materialIndex];
+
+      if (material) {
+        material.pbrMetallicRoughness.setBaseColorFactor([...hexToRgb(initialColor), 1]);
+      }
+    });
+
+    selectVariant.addEventListener('input', (event) => {
+      modelViewer.variantName = event.target.value === 'default' ? null : event.target.value;
+    });
+
+    // Handle mesh visibility based on checkbox
+    const showMattressCheckbox = document.querySelector("#show-mattress");
+
+    modelViewer.addEventListener("load", () => {
+      function updateAlphaValue(material, alpha) {
+        const pbr = material.pbrMetallicRoughness;
+        const baseColor = pbr.baseColorFactor;
+        baseColor[3] = alpha;
+        pbr.setBaseColorFactor(baseColor);
+      }
+
+      showMattressCheckbox.addEventListener("change", (event) => {
+        const madrac = modelViewer.model.getMaterialByName("Madrac");
+
+        if (madrac) {
+          madrac.setAlphaMode("BLEND");
+
+          const animationDuration = 1000; // 1 second
+          const startTimestamp = performance.now();
+
+          function animate(currentTimestamp) {
+            const elapsed = currentTimestamp - startTimestamp;
+            const delta = elapsed / animationDuration;
+            const alpha = event.target.checked ? delta : 1 - delta;
+
+            updateAlphaValue(madrac, alpha);
+
+            if (elapsed < animationDuration) {
+              requestAnimationFrame(animate);
+            }
+          }
+
+          requestAnimationFrame(animate);
+        } else {
+          console.error('Madrac material not found');
+        }
+      });
+    });
+
+    // Handle model selection
+    const modelSelector = document.querySelector('#model-selector');
+    modelSelector.addEventListener('input', (event) => {
+      modelViewer.src = event.target.value;
+      modelViewer.addEventListener('load', populateVariants, { once: true });
+      showMattressCheckbox.checked = true;
+      selectVariant.value = modelViewer.variantName || 'default';
+    });
+
+    // Handle light toggling
+    const toggleLightsButton = document.querySelector(".switch-button");
+    const lightOnSound = document.querySelector("#light-on-sound");
+    const lightOffSound = document.querySelector("#light-off-sound");
+
+    function toggleLights(state) {
+      if (state === "off") {
+        modelViewer.exposure = 0.02;  // Turn off lights
+        modelViewer.classList.add("dark-mode");  // Add dark background
+        toggleLightsButton.classList.remove("on");
+        toggleLightsButton.classList.add("off");
+        toggleLightsButton.textContent = "OFF";
+
+        // Check if audio playback is allowed
+        if (lightOffSound.paused) {
+          lightOffSound.play().catch(error => {
+            console.error('Failed to play light off sound:', error);
+          });
+        }
+      } else {
+        modelViewer.exposure = 0.7;  // Turn on lights
+        modelViewer.classList.remove("dark-mode");  // Remove dark background
+        toggleLightsButton.classList.remove("off");
+        toggleLightsButton.classList.add("on");
+        toggleLightsButton.textContent = "ON";
+
+        // Check if audio playback is allowed
+        if (lightOnSound.paused) {
+          lightOnSound.play().catch(error => {
+            console.error('Failed to play light on sound:', error);
+          });
+        }
+      }
+    }
+
+    // Set initial state to "on"
+    toggleLights("on");
+
+    toggleLightsButton.addEventListener("click", () => {
+      const isOn = toggleLightsButton.classList.contains("on");
+      toggleLights(isOn ? "off" : "on");
+    });
+
+    // Handle engraved text input
+    const textInput = document.querySelector("#text-input");
+    let canvasTexture = null;
+    let currentText = 'UPIŠITE VAŠ TEKST OVDJE'; // Default text
+
+    function getCanvasTexture() {
+      if (canvasTexture) return canvasTexture;
+      canvasTexture = modelViewer.createCanvasTexture();
+
+      // Ensure canvas dimensions maintain a suitable aspect ratio
+      const canvasWidth = 1800;
+      const canvasHeight = 300;
+      canvasTexture.source.element.width = canvasWidth;
+      canvasTexture.source.element.height = canvasHeight;
+
+      const ctx = canvasTexture.source.element.getContext('2d');
+
+      // Set background color to white
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Draw the centered text
+      let fontSize = 60; // Initial font size
+      ctx.font = `${fontSize}px sans-serif`;
+      ctx.fillStyle = "#8B4513"; // Brown wood color
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // Measure text width and adjust font size to fit
+      let textWidth = ctx.measureText(currentText).width;
+      while (textWidth > canvasWidth - 1250 && fontSize > 10) { // 20 is for padding
+        fontSize -= 3;
+        ctx.font = `${fontSize}px sans-serif`;
+        textWidth = ctx.measureText(currentText).width;
+      }
+
+      // Manual offsets to fine-tune text position
+      const xOffset = 190;  // Adjust this value to move text horizontally if needed
+      const yOffset = 0;  // Adjust this value to move text vertically if needed
+      ctx.fillText(currentText, canvasWidth / 2 + xOffset, canvasHeight / 2 + yOffset);
+
+      canvasTexture.source.update();
+      return canvasTexture;
+    }
+
+    function updateCanvasText(newText) {
+      // Limit text length to 20 characters
+      const maxLength = 20;
+      if (newText.length > maxLength) {
+        newText = newText.substring(0, maxLength);
+        alert("Maximum text length reached (20 characters)");
+      }
+
+      currentText = newText;
+      canvasTexture = null; // Reset the canvas texture to force re-creation
+      const baseColorTexture = modelViewer.model.materials[20].pbrMetallicRoughness.baseColorTexture;
+      baseColorTexture.setTexture(getCanvasTexture());
+    }
+
+    textInput.addEventListener('input', (event) => {
+      updateCanvasText(event.target.value);
+    });
+
+    // Ensure initial texture setup on model load event
+    modelViewer.addEventListener('load', () => {
+      const baseColorTexture = modelViewer.model.materials[20].pbrMetallicRoughness.baseColorTexture;
+      baseColorTexture.setTexture(getCanvasTexture());
+    });
   </script>
 </body>
 </html>
